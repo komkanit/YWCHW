@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ywc</title>
+</head>
+<body>
+  <canvas id="myCanvas" width="1000" height="700"></canvas>
+</body>
+</html>
+<style media="screen">
+  #myCanvas{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    border: solid 1px black;
+    background-color: black;
+  }
+  body{
+    background-color: black;
+  }
+</style>
+<script type="text/javascript">
+  var Y = {
+    x:-100,
+    y:100,
+    px:[50,25,25,50,-50,0,-50,0],
+    py:[0,42.5,-42.5,0,80,90,0,-90]
+  };
+  var W = {
+    x:400,
+    y:200,
+    px:[50,20,40,40,20,50,-20,-50,-40,-40,-50],
+    py:[0,120,-30,30,-120,0,170,0,-30,30,0],
+    m:0.01
+  };
+  var C = {
+    x:820,
+    y:100,
+    px:[120,0,-70,0,70,0,-120],
+    py:[0,50,0,70,0,50,0]
+  };
+  var star = {
+    x:[],
+    y:[],
+    n:0,
+    run:[]
+  };
+  var word = ['Y','o','u','n','g ','W','e','b','m','a','s','t','e','r ','C','a','m','p ','1','3'];
+  var n = 0;
+  var canvas = document.getElementById('myCanvas');
+  var ctx = canvas.getContext('2d');
+  var c = 0
+  var intervalId = setInterval(function(){
+    if(W.m>=1){
+      updateStar();
+      genStar();
+      genWord();
+      if(c == 0){
+        setInterval(function(){
+          star.x[star.n] = Math.floor((Math.random() * 900));
+          star.y[star.n] = Math.floor((Math.random() * 200));
+          star.run[star.n] = Math.floor(Math.random() * 5) -2;
+          star.n++;
+          if(star.n%3 == 0 && n<20)
+            n++;
+          else if(star.n%62==0)
+            n = 0;
+        },200);
+        c = 1;
+      }
+    }
+    update();
+    render();
+  },20);
+
+  function update(){
+    if(c == 0)
+    canvas.width = canvas.width;
+    if(Y.x<150)
+      Y.x+=3;
+    if(W.m<1)
+      W.m+=0.01;
+    if(W.y>100)
+      W.y-=1;
+    if(W.x>300)
+      W.x-=1;
+    if(C.x>520)
+        C.x-=3;
+  }
+  function render(){
+    drawY(Y.x,Y.y);
+    drawW(W.x,W.y);
+    drawC(C.x,C.y);
+
+  }
+  function updateStar(){
+    canvas.width = canvas.width;
+    for(var i=0 ; i<star.n ; i++){
+        star.x[i]+=star.run[i];
+        star.y[i]+=2;
+    }
+  }
+  function genStar(){
+    for(var i=0 ; i<star.n ; i++){
+      ctx.beginPath();
+      ctx.arc(star.x[i],star.y[i], 5, 0, 2 * Math.PI);
+      ctx.fillStyle = "rgb(81, 155, 164)";
+      ctx.fill();
+    }
+  }
+  function genWord(){
+    var str = "";
+    for(var i=0 ; i<n ; i++){
+      str+=word[i];
+    }
+    ctx.font = "50px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.fillText(str,120,400);
+  }
+  function drawC(x,y){
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    for(var i=0 ; i<7 ; i++){
+      x+=C.px[i];
+      y+=C.py[i];
+      ctx.lineTo(x,y);
+    }
+    ctx.fillStyle = "white";
+    ctx.fill();
+  }
+  function drawY(x,y) {
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      for(var i=0 ; i<8 ; i++){
+        x+=Y.px[i];
+        y+=Y.py[i];
+        ctx.lineTo(x,y);
+      }
+      ctx.fillStyle = "white";
+      ctx.fill();
+  }
+  function drawW(x,y){
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    for(var i=0 ; i<11 ; i++){
+      x+=W.px[i]*W.m;
+      y+=W.py[i]*W.m;
+      ctx.lineTo(x,y);
+    }
+    ctx.fillStyle = "white";
+    ctx.fill();
+  }
+</script>
